@@ -6,6 +6,10 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   base: "/ct-e-to-excel/",
+  build: {
+    outDir: "../docs",
+    emptyOutDir: true,
+  },
   server: {
     host: "::",
     port: 8080,
