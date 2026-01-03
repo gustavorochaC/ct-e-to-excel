@@ -7,8 +7,8 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig(({ mode }) => ({
   base: "/ct-e-to-excel/",
   build: {
-    outDir: "../docs",
-    emptyOutDir: true,
+    outDir: "../",
+    emptyOutDir: false,
   },
   server: {
     host: "::",
