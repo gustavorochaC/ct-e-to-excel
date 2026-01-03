@@ -3,10 +3,10 @@ import type { CTeData } from './pdfExtractor';
 
 export const generateExcel = (data: CTeData): void => {
   const excelData = [{
-    "Data Emissão": data.dataEmissao,
+    "Data": data.dataEmissao,
     "Nº CT-e": data.numeroCTe,
     "Série": data.serie,
-    "Chave de Acesso": data.chaveAcesso,
+    "Chave": data.chaveAcesso,
     "Transportadora": data.transportadora,
     "CNPJ Transportadora": formatCNPJ(data.cnpjTransportadora),
     "Remetente": data.remetente,
@@ -16,7 +16,7 @@ export const generateExcel = (data: CTeData): void => {
     "CNPJ Destinatário": formatCNPJ(data.cnpjDestinatario),
     "Destino": data.cidadeDestino && data.ufDestino ? `${data.cidadeDestino} - ${data.ufDestino}` : data.cidadeDestino || data.ufDestino,
     "Produto": data.produto,
-    "Peso (KG)": data.peso ? parseFloat(data.peso) : '',
+    "Peso KG": data.peso ? parseFloat(data.peso) : '',
     "Volumes": data.quantidadeVolumes ? parseInt(data.quantidadeVolumes) : '',
     "Valor Carga (R$)": data.valorTotalCarga ? parseFloat(data.valorTotalCarga) : '',
     "Valor Frete (R$)": data.valorFrete ? parseFloat(data.valorFrete) : '',

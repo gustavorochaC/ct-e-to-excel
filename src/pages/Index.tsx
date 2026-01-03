@@ -5,7 +5,7 @@ import Sidebar from '@/components/Sidebar';
 import UploadArea from '@/components/UploadArea';
 import ResultCard from '@/components/ResultCard';
 import ErrorMessage from '@/components/ErrorMessage';
-import { extractCTeData, countExtractedFields, type CTeData } from '@/lib/pdfExtractor';
+import { extractCTeData, countExtractedFields, getMissingFields, type CTeData } from '@/lib/pdfExtractor';
 import { generateExcel } from '@/lib/excelGenerator';
 
 const Index = () => {
@@ -44,14 +44,8 @@ const Index = () => {
 
     try {
       const data = await extractCTeData(file);
-      const fieldsCount = countExtractedFields(data);
       
-      if (fieldsCount < 5) {
-        setError('Não foi possível extrair os dados. Verifique se é um CT-e válido.');
-        setProcessing(false);
-        return;
-      }
-
+      // We always allow extraction now, but we'll show what's missing
       setExtractedData(data);
       generateExcel(data);
     } catch (err) {
@@ -116,6 +110,7 @@ const Index = () => {
               <ResultCard
                 data={extractedData}
                 fieldsCount={countExtractedFields(extractedData)}
+                missingFields={getMissingFields(extractedData)}
                 onDownload={handleDownload}
               />
             )}
