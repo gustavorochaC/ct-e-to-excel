@@ -183,6 +183,50 @@ export const clearMonthData = async (year: number, month: number): Promise<void>
   }
 };
 
+// Deletar um CT-e específico
+export const deleteCTe = async (chaveAcesso: string, year: number, month: number): Promise<void> => {
+  const monthKeyString = createMonthKeyString({ year, month });
+  
+  try {
+    const db = await initDB();
+    const transaction = db.transaction([STORE_NAME], 'readwrite');
+    const store = transaction.objectStore(STORE_NAME);
+    const index = store.index('monthYear');
+    
+    // Buscar dados do mês
+    const request = index.get(monthKeyString);
+    
+    return new Promise((resolve, reject) => {
+      request.onsuccess = () => {
+        const existingData = request.result;
+        
+        if (existingData && existingData.cteList) {
+          // Filtrar removendo o CT-e com a chave específica
+          const updatedList = existingData.cteList.filter(
+            (cte: CTeData) => cte.chaveAcesso !== chaveAcesso
+          );
+          
+          // Se a lista mudou, atualiza no banco
+          if (updatedList.length !== existingData.cteList.length) {
+            const saveRequest = store.put({ monthYear: monthKeyString, cteList: updatedList });
+            saveRequest.onsuccess = () => resolve();
+            saveRequest.onerror = () => reject(saveRequest.error);
+          } else {
+            resolve();
+          }
+        } else {
+          resolve();
+        }
+      };
+      
+      request.onerror = () => reject(request.error);
+    });
+  } catch (error) {
+    console.error('Erro ao deletar CT-e:', error);
+    throw error;
+  }
+};
+
 // Obter contagem de CT-es do mês atual
 export const getCurrentMonthCount = async (): Promise<number> => {
   const ctes = await getCTesFromCurrentMonth();
